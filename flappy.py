@@ -2,6 +2,132 @@ import pygame
 import random
 from pygame.locals import *
 
+# Importar Bibliotecas
+from tkinter import *
+from tkinter import messagebox
+from tkinter import ttk
+import DataBaser
+
+# Criar janela
+jan = Tk()
+jan.title("DP Systems - Acess Panel")
+jan.geometry("410x500")
+jan.configure(background="white")
+jan.resizable(width=False, height=False)
+jan.attributes("-alpha", 1.9)
+
+# Widgets
+
+
+def close():
+    jan.destroy()
+
+
+RightFrame = Frame(jan, width=410, height=500,
+                   bg="BLACK", relief="raise")
+RightFrame.pack(side=RIGHT)
+
+UserLabel = Label(RightFrame, text="Username:",
+                  font=("Century Gothic", 16), bg="BLACK", fg="White")
+UserLabel.place(x=35, y=130)
+
+UserEntry = ttk.Entry(RightFrame, width=24)
+UserEntry.place(x=180, y=140)
+
+PassLabel = Label(RightFrame, text="Password:",
+                  font=("Century Gothic", 16), bg="BLACK", fg="White")
+PassLabel.place(x=37, y=180)
+
+PassEntry = ttk.Entry(RightFrame, width=25, show="*")
+PassEntry.place(x=174, y=190)
+
+
+def Login():
+    User = UserEntry.get()
+    Pass = PassEntry.get()
+
+    DataBaser.cursor.execute("""
+    SELECT * FROM Users 
+    WHERE User = ? AND Password = ?
+    """, (User, Pass))
+    print("Selecionou")
+    VerifyLogin = DataBaser.cursor.fetchone()
+    try:
+        if(User in VerifyLogin and Pass in VerifyLogin):
+            messagebox.showinfo(title="Login Info",
+                                message="Acesso Confirmado, Bem vindo!", command=close())
+    except:
+        messagebox.showinfo(title="Login Info", message="Acesso Negado!")
+
+
+# Buttons
+LoginButton = ttk.Button(RightFrame, text="Login", width=20, command=Login)
+LoginButton.place(x=120, y=265)
+
+
+def Register():
+    # Removendo Wigets de login
+    LoginButton.place(x=5000)
+    RegisterButton.place(x=5000)
+    # Inserindo widgets de Cadastro
+    NomeLabel = Label(RightFrame, text="Name:", font=(
+        "Century Gothic", 16), bg="BLACK", fg="White")
+    NomeLabel.place(x=35, y=35)
+
+    NomeEntry = ttk.Entry(RightFrame, width=30)
+    NomeEntry.place(x=131, y=45)
+
+    EmailLabel = Label(RightFrame, text="Email:", font=(
+        "Century Gothic", 16), bg="BLACK", fg="White")
+    EmailLabel.place(x=35, y=85)
+
+    EmailEntry = ttk.Entry(RightFrame, width=32)
+    EmailEntry.place(x=117, y=95)
+
+    def RegisterToDataBase():
+        Name = NomeEntry.get()
+        Email = EmailEntry.get()
+        User = UserEntry.get()
+        Pass = PassEntry.get()
+
+        if(Name == "" and Email == "" and User == "" and Pass == ""):
+            messagebox.showerror(title="Register Error",
+                                 message="Preencha todos os campos")
+        else:
+            DataBaser.cursor.execute("""
+            INSERT INTO Users(Name, Email, User, Password) VALUES(?, ?, ?, ?)
+            """, (Name, Email, User, Pass))
+            DataBaser.conn.commit()
+            messagebox.showinfo(title='Register info',
+                                message="Register Sucessfull")
+
+    Register = ttk.Button(
+        RightFrame, text="Register", width=20, command=RegisterToDataBase)
+    Register.place(x=120, y=265)
+
+    def BackToLogin():
+        # Removendo Widgets de Cadastro
+        NomeLabel.place(x=5000)
+        NomeEntry.place(x=5000)
+        EmailLabel.place(x=5000)
+        EmailEntry.place(x=5000)
+        Register.place(x=5000)
+        Back.place(x=5000)
+        # Trazendo de volta Widgets de Login
+        LoginButton.place(x=120)
+        RegisterButton.place(x=120)
+
+    Back = ttk.Button(RightFrame, text="Back", width=20, command=BackToLogin)
+    Back.place(x=120, y=320)
+
+
+RegisterButton = ttk.Button(
+    RightFrame, text="Register", width=20, command=Register)
+RegisterButton.place(x=120, y=320)
+
+jan.mainloop()
+
+
 SCREEN_WIDTH = 350
 SCREEN_HEIGHT = 700
 SPEED = 10
