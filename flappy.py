@@ -1,3 +1,4 @@
+
 # Importar Bibliotecas
 from tkinter import *
 from tkinter import messagebox
@@ -141,12 +142,6 @@ def close():
     jan.destroy()
 
 
-# def jogar():
-#     tela2 = Tk()
-#     tela2.title("DP Systems - Acess Panel")
-#     tela2.geometry("300x300")
-
-
 def open():
 
     tela = tk.Tk()
@@ -226,13 +221,9 @@ def open():
 
     def desenhar():
 
-        # jANELA = tk.Frame(tela)
         JANELA.blit(fundo, (0, 0))  # colocando o fundo
         for canos in cano:
             canos.desenhar()
-        # baseX = 0
-        # passaroX = 80
-        # passaroY = 150
         JANELA.blit(base, (0, 480))
         JANELA.blit(bird, (passaroX, passaroY))
         pontuacao = FONTE.render(str(pontos), True, YELLOW)
@@ -251,7 +242,6 @@ def open():
         pontos = 0
         cano = []
         cano.append(Canos())
-        # contarPontos = False
 
     def vocePerdeu():
         JANELA.blit(gameOver, (0, 60))
@@ -265,13 +255,6 @@ def open():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         inicializarVariaveis()
-                        # baseX = 0
-                        # passaroX = 80
-                        # passaroY = 150
-                        # # passaroVel = 0
-                        # pontos = 0
-                        # cano = []
-                        # cano.append(Canos())
                         global passaroVel
                         passaroVel = 10
                         verificar = False  # passando o verifica pra false, o jogador podew jogar novamente
